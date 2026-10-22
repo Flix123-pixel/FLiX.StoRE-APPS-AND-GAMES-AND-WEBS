@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flixpedia - Apps, Games & Websites Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #e50914;
+        }
+        .publish-box {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background-color: #2a2a2a;
+            color: white;
+            box-sizing: border-box;
+        }
+        .publish-btn {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        .publish-btn:hover {
+            background-color: #b20710;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border-left: 4px solid #e50914;
+        }
+        .card h3 {
+            margin: 0 0 10px 0;
+            color: #fff;
+        }
+        .card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #bbb;
+        }
+        .card a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>flixpedia</h1>
+        <p style="text-align: center; color: #aaa;">Wikipedia of the Earth & Creator Hub</p>
+
+        <!-- Publish Form -->
+        <div class="publish-box">
+            <h2>Publish App / Game / Website</h2>
+            <div class="form-group">
+                <label for="appName">Item Name (App / Game / Website):</label>
+                <input type="text" id="appName" placeholder="e.g. Rampage City">
+            </div>
+            <div class="form-group">
+                <label for="appLink">Download / Visit URL (Link):</label>
+                <input type="url" id="appLink" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label for="makerName">App Maker Name:</label>
+                <input type="text" id="makerName" placeholder="SHADOWFLIX STUDIO">
+            </div>
+            <button class="publish-btn" onclick="publishItem()">Publish</button>
+        </div>
+
+        <!-- Published Items Section -->
+        <h2>Published Apps, Games & Websites</h2>
+        <div id="itemsGrid" class="grid">
+            <!-- Dynamic items will load here -->
+        </div>
+    </div>
+
+    <script>
+        // Load existing items from localStorage when page loads
+        document.addEventListener("DOMContentLoaded", loadItems);
+
+        function publishItem() {
+            const name = document.getElementById("appName").value.trim();
+            const link = document.getElementById("appLink").value.trim();
+            const maker = document.getElementById("makerName").value.trim();
+
+            if (!name || !link || !maker) {
+                alert("Kripya sabhi fields (Name, Link, aur Maker Name) bhariye!");
+                return;
+            }
+
+            // Check if Maker Name matches required studio name
+            if (maker !== "SHADOWFLIX STUDIO") {
+                alert("Error: App Maker Name must be 'SHADOWFLIX STUDIO'!");
+                return;
+            }
+
+            // Password prompt validation
+            const password = prompt("Publish karne ke liye password enter karein:");
+            if (password === null) {
+                return; // Cancelled
+            }
+            if (password !== "qwerty") {
+                alert("Galat password! Item publish nahi kiya ja sakta.");
+                return;
+            }
+
+            // Create item object
+            const newItem = {
+                name: name,
+                link: link,
+                maker: maker,
+                date: new Date().toLocaleDateString()
+            };
+
+            // Save to localStorage
+            let items = JSON.parse(localStorage.getItem("flixItems")) || [];
+            items.push(newItem);
+            localStorage.setItem("flixItems", JSON.stringify(items));
+
+            // Reset inputs and reload grid
+            document.getElementById("appName").value = "";
+            document.getElementById("appLink").value = "";
+            document.getElementById("makerName").value = "";
+
+            loadItems();
+            alert("Success! Aapka item successfully publish ho gaya hai.");
+        }
+
+        function loadItems() {
+            const grid = document.getElementById("itemsGrid");
+            grid.innerHTML = "";
+
+            let items = JSON.parse(localStorage.getItem("flixItems")) || [];
+
+            if (items.length === 0) {
+                grid.innerHTML = "<p style='color: #77; text-align: center; grid-column: 1/-1;'>Abhi tak koi item publish nahi hua hai.</p>";
+                return;
+            }
+
+            items.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                    <h3>${escapeHtml(item.name)}</h3>
+                    <p><strong>Maker:</strong> ${escapeHtml(item.maker)}</p>
+                    <p><small>Published: ${item.date}</small></p>
+                    <a href="${escapeHtml(item.link)}" target="_blank">Open / Download ➔</a>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Security helper to prevent HTML injection
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+
+</body>
+</html>
