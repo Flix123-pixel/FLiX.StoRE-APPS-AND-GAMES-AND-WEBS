@@ -3,118 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#121212">
     <title>flix.store - Apps, Games & Websites Portal</title>
     <style>
+        :root {
+            --bg: #121212;
+            --panel: #1e1e1e;
+            --panel-2: #2a2a2a;
+            --line: #333;
+            --text: #ffffff;
+            --muted: #bbbbbb;
+            --accent: #e50914;
+            --accent-2: #b20710;
+            --green: #27ae60;
+            --blue: #2980b9;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
+            background: linear-gradient(180deg, #0f0f0f 0%, #191919 100%);
+            color: var(--text);
             margin: 0;
             padding: 20px;
         }
+
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
+
+        .top-link-wrap {
+            text-align: center;
+            margin: 10px 0 15px;
+        }
+
+        .top-link {
+            display: inline-block;
+            font-size: clamp(1.4rem, 3vw, 2.1rem);
+            font-weight: bold;
+            color: #f4f4f4;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 10px 18px;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .top-link:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-1px);
+        }
+
         h1, h2 {
             text-align: center;
-            color: #e50914;
+            color: var(--accent);
+            margin-top: 10px;
+            margin-bottom: 12px;
         }
-        .publish-box {
-            background-color: #1e1e1e;
-            padding: 20px;
+
+        .open-link-btn {
+            display: block;
+            width: min(100%, 260px);
+            margin: 12px auto 20px;
+            padding: 14px 18px;
+            border: none;
             border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, var(--accent), #ff3b46);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(229, 9, 20, 0.35);
+            transition: transform 0.2s ease, filter 0.2s ease;
         }
+
+        .open-link-btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+        }
+
+        .publish-box {
+            background-color: var(--panel);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 7px;
             font-weight: bold;
+            color: #f2f2f2;
         }
+
         input[type="text"], input[type="url"] {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #333;
-            border-radius: 5px;
-            background-color: #2a2a2a;
+            padding: 12px 12px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background-color: var(--panel-2);
             color: white;
             box-sizing: border-box;
+            font-size: 1rem;
         }
+
+        input:focus {
+            outline: 2px solid rgba(229, 9, 20, 0.4);
+            border-color: var(--accent);
+        }
+
         .publish-btn {
-            background-color: #e50914;
+            background-color: var(--accent);
             color: white;
             border: none;
-            padding: 12px 20px;
-            font-size: 16px;
+            padding: 14px 20px;
+            font-size: 1rem;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             width: 100%;
-            transition: background 0.3s;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
+
         .publish-btn:hover {
-            background-color: #b20710;
+            background-color: var(--accent-2);
+            transform: translateY(-1px);
         }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
         }
+
         .card {
-            background-color: #1e1e1e;
+            background-color: var(--panel);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            border-left: 4px solid #e50914;
+            border-left: 4px solid var(--accent);
         }
+
         .card h3 {
             margin: 0 0 10px 0;
             color: #fff;
+            word-break: break-word;
         }
+
         .card p {
             margin: 5px 0;
             font-size: 14px;
-            color: #bbb;
+            color: var(--muted);
+            word-break: break-word;
         }
+
         .btn-group {
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
+
         .action-btn {
-            flex: 1;
-            padding: 8px 10px;
+            flex: 1 1 130px;
+            padding: 10px 12px;
             text-align: center;
-            border-radius: 5px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
             font-size: 13px;
         }
+
         .download-btn {
-            background-color: #27ae60;
+            background-color: var(--green);
             color: white;
         }
+
         .download-btn:hover {
             background-color: #219653;
         }
+
         .visit-btn {
-            background-color: #2980b9;
+            background-color: var(--blue);
             color: white;
         }
+
         .visit-btn:hover {
             background-color: #1f618d;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 14px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .publish-box {
+                padding: 16px;
+            }
+
+            .open-link-btn {
+                width: 100%;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <div class="top-link-wrap">
+            <a class="top-link" href="https://flix123-pixel.github.io/flixPEDIA.net/" target="_blank" rel="noopener noreferrer">flix.PEDIA</a>
+        </div>
+
         <h1>flix.store</h1>
-        <p style="text-align: center; color: #aaa;">welcome</p>
+        <button class="open-link-btn" type="button" onclick="window.open('https://flix123-pixel.github.io/flixPEDIA.net/', '_blank')">Open Link</button>
+        <p style="text-align: center; color: #aaa; margin-top: 0;">welcome</p>
 
         <!-- Publish Form -->
         <div class="publish-box">
@@ -132,8 +257,8 @@
                 <input type="url" id="webLink" placeholder="https://... (optional if only app/game)">
             </div>
             <div class="form-group">
-                <label for="makerName">App Maker Name:</label>
-                <input type="text" id="makerName" placeholder="SHADOWFLIX STUDIO ya kuch bhi">
+                <label for="makerName">Developer Name:</label>
+                <input type="text" id="makerName" value="shadowflix studios" placeholder="shadowflix studios">
             </div>
             <button class="publish-btn" onclick="publishItem()">Publish Item</button>
         </div>
@@ -146,17 +271,28 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", loadItems);
+        document.addEventListener("DOMContentLoaded", () => {
+            const makerInput = document.getElementById("makerName");
+            if (!makerInput.value.trim()) {
+                makerInput.value = "shadowflix studios";
+            }
+            loadItems();
+        });
 
         function publishItem() {
             const name = document.getElementById("appName").value.trim();
             const downloadLink = document.getElementById("downloadLink").value.trim();
             const webLink = document.getElementById("webLink").value.trim();
-            const maker = document.getElementById("makerName").value.trim();
+            let maker = document.getElementById("makerName").value.trim();
 
-            if (!name || !maker) {
-                alert("Kripya Item Name aur Maker Name zaroor bhariye!");
+            if (!name) {
+                alert("Kripya Item Name zaroor bhariye!");
                 return;
+            }
+
+            if (!maker) {
+                maker = "shadowflix studios";
+                document.getElementById("makerName").value = maker;
             }
 
             if (!downloadLink && !webLink) {
@@ -164,10 +300,10 @@
                 return;
             }
 
-            // Password check ONLY if maker name is "SHADOWFLIX STUDIO" (case-insensitive check optional, exact match preferred)
-            if (maker === "SHADOWFLIX STUDIO") {
+            // Keep the secret password check, but allow the studio name as used in your portal.
+            if (/^shadowflix\s*studios?$/i.test(maker)) {
                 const password = prompt("Shadowflix Studio ke liye password enter karein:");
-                if (password === null) return; // Cancelled
+                if (password === null) return;
                 if (password !== "qwerty") {
                     alert("Galat password! Item publish nahi ho sakta.");
                     return;
@@ -186,11 +322,10 @@
             items.push(newItem);
             localStorage.setItem("flixItems", JSON.stringify(items));
 
-            // Reset Form
             document.getElementById("appName").value = "";
             document.getElementById("downloadLink").value = "";
             document.getElementById("webLink").value = "";
-            document.getElementById("makerName").value = "";
+            document.getElementById("makerName").value = "shadowflix studios";
 
             loadItems();
             alert("Success! Aapka item successfully publish ho gaya hai.");
@@ -210,13 +345,13 @@
             items.forEach(item => {
                 const card = document.createElement("div");
                 card.className = "card";
-                
+
                 let buttonsHTML = '<div class="btn-group">';
                 if (item.downloadLink) {
-                    buttonsHTML += `<a href="${escapeHtml(item.downloadLink)}" target="_blank" class="action-btn download-btn">Download File</a>`;
+                    buttonsHTML += `<a href="${escapeHtml(item.downloadLink)}" target="_blank" rel="noopener noreferrer" class="action-btn download-btn">Download File</a>`;
                 }
                 if (item.webLink) {
-                    buttonsHTML += `<a href="${escapeHtml(item.webLink)}" target="_blank" class="action-btn visit-btn">Open Website</a>`;
+                    buttonsHTML += `<a href="${escapeHtml(item.webLink)}" target="_blank" rel="noopener noreferrer" class="action-btn visit-btn">Open Website</a>`;
                 }
                 buttonsHTML += '</div>';
 
@@ -231,7 +366,7 @@
         }
 
         function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&#039;");
         }
     </script>
 
