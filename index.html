@@ -133,7 +133,7 @@
             </div>
             <div class="form-group">
                 <label for="makerName">App Maker Name:</label>
-                <input type="text" id="makerName" placeholder="SHADOWFLIX STUDIO">
+                <input type="text" id="makerName" placeholder="SHADOWFLIX STUDIO ya kuch bhi">
             </div>
             <button class="publish-btn" onclick="publishItem()">Publish Item</button>
         </div>
@@ -164,18 +164,14 @@
                 return;
             }
 
-            // Check Maker Name
-            if (maker !== "SHADOWFLIX STUDIO") {
-                alert("Error: App Maker Name must be 'SHADOWFLIX STUDIO'!");
-                return;
-            }
-
-            // Password Check
-            const password = prompt("Publish karne ke liye password enter karein:");
-            if (password === null) return;
-            if (password !== "qwerty") {
-                alert("Galat password! Item publish nahi ho sakta.");
-                return;
+            // Password check ONLY if maker name is "SHADOWFLIX STUDIO" (case-insensitive check optional, exact match preferred)
+            if (maker === "SHADOWFLIX STUDIO") {
+                const password = prompt("Shadowflix Studio ke liye password enter karein:");
+                if (password === null) return; // Cancelled
+                if (password !== "qwerty") {
+                    alert("Galat password! Item publish nahi ho sakta.");
+                    return;
+                }
             }
 
             const newItem = {
