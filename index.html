@@ -61,7 +61,7 @@
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
         }
         .card {
@@ -80,15 +80,33 @@
             font-size: 14px;
             color: #bbb;
         }
-        .card a {
-            display: inline-block;
-            margin-top: 10px;
-            color: #3498db;
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 8px 10px;
+            text-align: center;
+            border-radius: 5px;
             text-decoration: none;
             font-weight: bold;
+            font-size: 13px;
         }
-        .card a:hover {
-            text-decoration: underline;
+        .download-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+        .download-btn:hover {
+            background-color: #219653;
+        }
+        .visit-btn {
+            background-color: #2980b9;
+            color: white;
+        }
+        .visit-btn:hover {
+            background-color: #1f618d;
         }
     </style>
 </head>
@@ -100,20 +118,24 @@
 
         <!-- Publish Form -->
         <div class="publish-box">
-            <h2>Publish App / Game / Website</h2>
+            <h2>Publish App, Game or Website</h2>
             <div class="form-group">
-                <label for="appName">Item Name (App / Game / Website):</label>
+                <label for="appName">Item Name:</label>
                 <input type="text" id="appName" placeholder="e.g. Rampage City">
             </div>
             <div class="form-group">
-                <label for="appLink">Download / Visit URL (Link):</label>
-                <input type="url" id="appLink" placeholder="https://...">
+                <label for="downloadLink">Download File Link (APK / Zip):</label>
+                <input type="url" id="downloadLink" placeholder="https://... (optional if only website)">
+            </div>
+            <div class="form-group">
+                <label for="webLink">Website / Live URL Link:</label>
+                <input type="url" id="webLink" placeholder="https://... (optional if only app/game)">
             </div>
             <div class="form-group">
                 <label for="makerName">App Maker Name:</label>
                 <input type="text" id="makerName" placeholder="SHADOWFLIX STUDIO">
             </div>
-            <button class="publish-btn" onclick="publishItem()">Publish</button>
+            <button class="publish-btn" onclick="publishItem()">Publish Item</button>
         </div>
 
         <!-- Published Items Section -->
@@ -124,51 +146,54 @@
     </div>
 
     <script>
-        // Load existing items from localStorage when page loads
         document.addEventListener("DOMContentLoaded", loadItems);
 
         function publishItem() {
             const name = document.getElementById("appName").value.trim();
-            const link = document.getElementById("appLink").value.trim();
+            const downloadLink = document.getElementById("downloadLink").value.trim();
+            const webLink = document.getElementById("webLink").value.trim();
             const maker = document.getElementById("makerName").value.trim();
 
-            if (!name || !link || !maker) {
-                alert("Kripya sabhi fields (Name, Link, aur Maker Name) bhariye!");
+            if (!name || !maker) {
+                alert("Kripya Item Name aur Maker Name zaroor bhariye!");
                 return;
             }
 
-            // Check if Maker Name matches required studio name
+            if (!downloadLink && !webLink) {
+                alert("Kripya kam se kam ek link (Download link ya Website link) zaroor dalein!");
+                return;
+            }
+
+            // Check Maker Name
             if (maker !== "SHADOWFLIX STUDIO") {
                 alert("Error: App Maker Name must be 'SHADOWFLIX STUDIO'!");
                 return;
             }
 
-            // Password prompt validation
+            // Password Check
             const password = prompt("Publish karne ke liye password enter karein:");
-            if (password === null) {
-                return; // Cancelled
-            }
+            if (password === null) return;
             if (password !== "qwerty") {
-                alert("Galat password! Item publish nahi kiya ja sakta.");
+                alert("Galat password! Item publish nahi ho sakta.");
                 return;
             }
 
-            // Create item object
             const newItem = {
                 name: name,
-                link: link,
+                downloadLink: downloadLink,
+                webLink: webLink,
                 maker: maker,
                 date: new Date().toLocaleDateString()
             };
 
-            // Save to localStorage
             let items = JSON.parse(localStorage.getItem("flixItems")) || [];
             items.push(newItem);
             localStorage.setItem("flixItems", JSON.stringify(items));
 
-            // Reset inputs and reload grid
+            // Reset Form
             document.getElementById("appName").value = "";
-            document.getElementById("appLink").value = "";
+            document.getElementById("downloadLink").value = "";
+            document.getElementById("webLink").value = "";
             document.getElementById("makerName").value = "";
 
             loadItems();
@@ -182,24 +207,33 @@
             let items = JSON.parse(localStorage.getItem("flixItems")) || [];
 
             if (items.length === 0) {
-                grid.innerHTML = "<p style='color: #77; text-align: center; grid-column: 1/-1;'>Abhi tak koi item publish nahi hua hai.</p>";
+                grid.innerHTML = "<p style='color: #777; text-align: center; grid-column: 1/-1;'>Abhi tak koi item publish nahi hua hai.</p>";
                 return;
             }
 
             items.forEach(item => {
                 const card = document.createElement("div");
                 card.className = "card";
+                
+                let buttonsHTML = '<div class="btn-group">';
+                if (item.downloadLink) {
+                    buttonsHTML += `<a href="${escapeHtml(item.downloadLink)}" target="_blank" class="action-btn download-btn">Download File</a>`;
+                }
+                if (item.webLink) {
+                    buttonsHTML += `<a href="${escapeHtml(item.webLink)}" target="_blank" class="action-btn visit-btn">Open Website</a>`;
+                }
+                buttonsHTML += '</div>';
+
                 card.innerHTML = `
                     <h3>${escapeHtml(item.name)}</h3>
                     <p><strong>Maker:</strong> ${escapeHtml(item.maker)}</p>
                     <p><small>Published: ${item.date}</small></p>
-                    <a href="${escapeHtml(item.link)}" target="_blank">Open / Download ➔</a>
+                    ${buttonsHTML}
                 `;
                 grid.appendChild(card);
             });
         }
 
-        // Security helper to prevent HTML injection
         function escapeHtml(str) {
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
